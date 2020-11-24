@@ -15,15 +15,18 @@ class MyApp(QWidget):
         # 회색 #7a8187
         # 주황 #f2a23b
 
+        # Y 좌표
         top = [80, 154, 228, 302, 376]
 
+        # X 좌표
         left = [0, 74, 148, 222]
 
+        # 계산기 키값들
         btnList = ['AC','+/-','%','÷','7','8','9','×','4','5','6','―','1','2','3','+','0','s','.','=']
 
-        calcList = []
+        calcList = ['AC','+/-','%','÷','7','8','9','×','4','5','6','―','1','2','3','+','0','s','.','=']
 
-        # label
+        # label의 종료를 알기위해
         num = 0
 
         # 결과값이 나오는 Label를 지정하고 위치는 오른쪽으로 고정
@@ -62,16 +65,18 @@ class MyApp(QWidget):
                     if (btnList[num] == '÷' or btnList[num] == '×' or btnList[num] == '―' or btnList[num] == '+' or btnList[num] == '='):
                         btn.setStyleSheet("color: black;"
                                 "background-color :  #f2a23b")
-                        btn.clicked.connect(lambda : self.result(label, 's'))
+                        # btn.clicked.connect(lambda : self.result(label, 's'))
                     else:    
                         btn.setStyleSheet("color: black;"
                                 "background-color :  #7a8187")
-                        btn.clicked.connect(lambda : self.result(label, 'd'))
+                        # btn.clicked.connect(lambda : self.result(label, 'd'))
 
                     # # 여기 뭐야 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     # btn.clicked.connect(lambda : self.result(label, btnList[num-1]))
                     
+                    print(btnList[num])
                     num += 1
+                    
                     
             if (num == len(btnList)):
                 break
@@ -83,13 +88,11 @@ class MyApp(QWidget):
         self.setGeometry(400, 400, 296, 450)
         # 프로그램 켜기
         self.show()
-
         
         # 여기 뭐야 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        btn.clicked.connect(lambda : self.result(label, num))
+        # btn.clicked.connect(lambda : self.result(label, num))
 
     def result(self, label, btn):
-        print("들어가긴 하니?")
         label.setText(btn)
         label.repaint()
     
