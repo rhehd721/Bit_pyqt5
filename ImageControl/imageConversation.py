@@ -118,11 +118,13 @@ class MyApp(QMainWindow):
     def BlurButtonState(self, state):
         if (state == 2):    # 만약 상태가 눌린상태라면
             self.BlurState = 1
+            self.Shrpen.setEnabled(False)
         else:
             self.BlurState = 0
     def ShrpenButtonState(self, state):
         if (state == 2):    # 만약 상태가 눌린상태라면
             self.ShrpenState = 1
+            self.Blur.setEnabled(False)
         else:
             self.ShrpenState = 0
     def GrayButtonState(self, state):
@@ -139,26 +141,42 @@ class MyApp(QMainWindow):
     # None 체크박스 상태 함수
     def changeNone(self, state):
         if (state == 2):    # 만약 상태가 눌린상태라면
-            self.Blur.toggle()
-            self.Shrpen.toggle()
+            self.Shrpen.setCheckable(False)
+            self.Blur.setCheckable(False)
+            self.Shrpen.setEnabled(False)
+            self.Blur.setEnabled(False)
+        else:
+            self.Shrpen.setEnabled(True)
+            self.Blur.setEnabled(True)
+            self.Shrpen.setCheckable(True)
+            self.Blur.setCheckable(True)
+
 
     # 버튼들의 상태에 따라 이미지 변환후 저장
     def SaveImage(self):
-        # Con = Conversation()
-
         image = cv2.imread(self.ChoiceFile, cv2.IMREAD_COLOR)
         ChangeImage = 0
 
+        if (self.InvertState == 1):
+            ChangeImage = self.InvertDef(image)
+        else:
+            ChangeImage = image
+
         if (self.BlurState == 1):
-            ChangeImage = self.BlurDef(image)
-        # # if (self.ShrpenState == 1):
-        # #     Con.Shrpen(self.ChoiceFile)
-        # if (ChangeImage != 0):
-        #     ChangeImage = 0
-        #     if (self.GrayState == 1):
-        #         Con.Gray(self.ChoiceFile)
-        # if (self.InvertState == 1):
-        #     Con.Invert(self.ChoiceFile)
+            ChangeImage = self.BlurDef(ChangeImage)
+        else:
+            ChangeImage = ChangeImage
+
+        if (self.GrayState == 1):
+            ChangeImage = self.GrayDef(ChangeImage)
+        else:
+            ChangeImage = ChangeImage
+
+        if (self.ShrpenState == 1):
+            ChangeImage = self.ShrpenDef(ChangeImage)
+        else:
+            ChangeImage = ChangeImage
+
 
         cv2.imwrite("Output/Result.png", ChangeImage)
 
@@ -171,6 +189,19 @@ class MyApp(QMainWindow):
         kernel = np.ones((2, 2), np.uint8)
         ChangedImage = cv2.filter2D(image, -1, kernel)
         return ChangedImage
+
+    def InvertDef(self, image):
+        dst = cv2.bitwise_not(image)
+        return dst
+
+    def GrayDef(self, image):
+        dst = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        return dst
+
+    def ShrpenDef(self, image):
+        kernel = np.array([[1,1,1],[1,-8,1],[1,1,1]])
+        dst = cv2.filter2D(image, -1, kernel)
+        return dst
 
 
 
