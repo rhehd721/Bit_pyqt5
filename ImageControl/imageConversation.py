@@ -6,8 +6,16 @@ import os
 import cv2
 import numpy as np
 
-
-# from Conversation import Conversation
+# CropImage = cv2.imread('Before.png', cv2.IMREAD_COLOR)
+#
+# xLength = 320
+# yLength = 280
+#
+# # cv2.resize(원본 이미지, 결과 이미지 크기, 보간법)
+# ChangedImage = cv2.resize(CropImage, (xLength, yLength), cv2.INTER_AREA)
+#
+# # 자른 사진을 다른이름으로 다른 경로에 저장합니다
+# cv2.imwrite("Before2.png", ChangedImage)
 
 # 사진을 저장할 폴더 생성
 def createFolder(directory):
@@ -109,8 +117,18 @@ class MyApp(QMainWindow):
         splitlist = self.ChoiceFile.split('/')
         self.ChoiceFile = splitlist[len(splitlist)-1]
 
+        ChangeImage = cv2.imread(self.ChoiceFile, cv2.IMREAD_COLOR)
+
+        xLength = 320
+        yLength = 280
+
+        # cv2.resize(원본 이미지, 결과 이미지 크기, 보간법)
+        ChangeImage = cv2.resize(ChangeImage, (xLength, yLength), cv2.INTER_AREA)
+
+        cv2.imwrite("Input/ChoiceImage.png", ChangeImage)
+
         # 사진을 고르면 새로운 사진으로 라벨 업데이트
-        BeforeImage = QPixmap(self.ChoiceFile)
+        BeforeImage = QPixmap("Input/ChoiceImage.png")
         self.BeforeLabel.setPixmap(QPixmap(BeforeImage))
         self.BeforeLabel.repaint()
 
@@ -141,6 +159,8 @@ class MyApp(QMainWindow):
     # None 체크박스 상태 함수
     def changeNone(self, state):
         if (state == 2):    # 만약 상태가 눌린상태라면
+            self.ShrpenState = 0
+            self.BlurState = 0
             self.Shrpen.setCheckable(False)
             self.Blur.setCheckable(False)
             self.Shrpen.setEnabled(False)
@@ -177,6 +197,11 @@ class MyApp(QMainWindow):
         else:
             ChangeImage = ChangeImage
 
+        xLength = 320
+        yLength = 280
+
+        # cv2.resize(원본 이미지, 결과 이미지 크기, 보간법)
+        ChangeImage = cv2.resize(ChangeImage, (xLength, yLength), cv2.INTER_AREA)
 
         cv2.imwrite("Output/Result.png", ChangeImage)
 
